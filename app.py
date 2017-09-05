@@ -1,45 +1,40 @@
 from mongoengine import *
 from models import *
+from flask import Flask
+from flask import request
+from flask import jsonify
 
+
+app = Flask(__name__)
 connect('tumblelog')
-ross = User(email='ross@example.com')
-ross.first_name = 'Ross'
-ross.last_name = 'Lawley'
-ross.save()
-# Below is the same as the 4 lines above
-john = User(email='john@example.com', first_name='John', last_name='Lopez').save()
 
 
-post1 = TextPost(title='Fun with MongoEngine', author=john)
-post1.content = 'Took a look at MongoEngine today, looks pretty cool.'
-post1.tags = ['mongodb', 'mongoengine']
-post1.save()
-
-post2 = LinkPost(title='MongoEngine Documentation', author=ross)
-post2.link_url = 'http://docs.mongoengine.com/'
-post2.tags = ['mongoengine']
-post2.save()
-
-
-[print(post.title) for post in Post.objects]
-
-[print(post.content) for post in TextPost.objects]
-
-for post in Post.objects:
-    print(post.title)
-    print('=' * len(post.title))
-
-    if isinstance(post, TextPost):
-        print(post.content)
-
-    if isinstance(post, LinkPost):
-        print('link: {}'.format(post.link_url))
+# CREATE
+@app.route('/createuser', methods=['GET', 'POST'])
+def adduser():
+    if request.method == 'POST':
+        # TODO: Implement validation
+        newuser = User(email=request.form['email'])
+        newuser.first_name = request.form['first_name']
+        newuser.last_name = request.form['last_name']
+        newuser.save()
+        return jsonify(request.form)
+    else:
+        return "nothing"
 
 
-for post in Post.objects(tags='mongodb'):
-    print(post.title)
+# READ
+@app.route('/listusers', methods=['GET'])
+def listusers():
+    if request.method == 'GET':
+        users = [user.first_name for user in User.objects]
 
+        return jsonify(users)
+    else:
+        return "nothing"
 
-num_posts = Post.objects(tags='mongodb').count()
-print('Found {} posts with tag "mongodb"'.format(num_posts))
+# TODO: UPDATE
+# TODO: DELETE
 
+if __name__ == '__main__':
+    app.run()
