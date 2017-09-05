@@ -35,6 +35,13 @@ def listusers():
 
 # TODO: UPDATE
 # TODO: DELETE
+# TODO: Convert to PEP8 
+# TODO: Convert to Flask_RESTPlus
+# TODO: Research & incorporate methods for avoiding any possible MongoDB version of SQL injection
+# TODO: Create Tests for functions
+# TODO: Break functions out of routes into their own folder structure for each route
+# TODO: Move any shared business logic /service layers to a utilities folder or a core folder
+
 
 if __name__ == '__main__':
     app.run()
